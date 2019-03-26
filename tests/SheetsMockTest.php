@@ -1,9 +1,9 @@
 <?php
+
 namespace Tests;
 
 use Mockery as m;
-
-use Revolution\Google\Sheets\Sheets;
+use Tipy\Google\Sheets\Sheets;
 
 class SheetsMockTest extends TestCase
 {

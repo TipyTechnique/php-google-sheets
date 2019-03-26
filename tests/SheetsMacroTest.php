@@ -2,7 +2,7 @@
 
 namespace Tests;
 
-use Revolution\Google\Sheets\Facades\Sheets;
+use Tipy\Google\Sheets\Facades\Sheets;
 
 class SheetsMacroTest extends TestCase
 {

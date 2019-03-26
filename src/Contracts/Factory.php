@@ -1,6 +1,6 @@
 <?php
 
-namespace Revolution\Google\Sheets\Contracts;
+namespace Tipy\Google\Sheets\Contracts;
 
 use Google_Service_Drive;
 use Google_Service_Sheets;
@@ -66,7 +66,7 @@ interface Factory
     public function get(): Collection;
 
     /**
-     * @param array                                $header
+     * @param array $header
      * @param array|\Illuminate\Support\Collection $rows
      *
      * @return \Illuminate\Support\Collection
@@ -109,12 +109,12 @@ interface Factory
     public function first();
 
     /**
-     * @param array  $value
+     * @param array $values
      * @param string $valueInputOption
      *
      * @return mixed|\Google_Service_Sheets_UpdateValuesResponse
      */
-    public function update(array $value, string $valueInputOption = 'RAW');
+    public function update(array $values, string $valueInputOption = 'RAW');
 
     /**
      * @return mixed|\Google_Service_Sheets_ClearValuesResponse
@@ -122,7 +122,7 @@ interface Factory
     public function clear();
 
     /**
-     * @param array  $value
+     * @param array $value
      * @param string $valueInputOption
      * @param string $insertDataOption
      *
@@ -133,14 +133,14 @@ interface Factory
     /**
      * @return string
      */
-    public function ranges();
+    public function getRanges();
 
     /**
-     * @param string $range
+     * @param array $ranges
      *
      * @return $this
      */
-    public function range(string $range);
+    public function setRanges(array $ranges);
 
     /**
      * @param string $majorDimension

@@ -1,6 +1,6 @@
 {
-  "name": "revolution/laravel-google-sheets",
-  "description": "Google Sheets API v4",
+  "name": "TipyTechnique/php-google-sheets",
+  "description": "Google Sheets API v4 (with Laravel or simple PHP)",
   "keywords": [
     "google",
     "sheets",
@@ -19,7 +19,7 @@
   },
   "autoload": {
     "psr-4": {
-      "Revolution\\Google\\Sheets\\": "src/"
+      "Tipy\\Google\\Sheets\\": "src/"
     }
   },
   "autoload-dev": {
@@ -29,17 +29,17 @@
   },
   "authors": [
     {
-      "name": "kawax",
-      "email": "kawaxbiz@gmail.com"
+      "name": "technique",
+      "email": "technique@tipy.tv"
     }
   ],
   "extra": {
     "laravel": {
       "providers": [
-        "Revolution\\Google\\Sheets\\Providers\\SheetsServiceProvider"
+        "Tipy\\Google\\Sheets\\Providers\\SheetsServiceProvider"
       ],
       "aliases": {
-        "Sheets": "Revolution\\Google\\Sheets\\Facades\\Sheets"
+        "Sheets": "Tipy\\Google\\Sheets\\Facades\\Sheets"
       }
     }
   }

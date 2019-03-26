@@ -3,10 +3,8 @@
 namespace Tests;
 
 use Mockery as m;
-
 use PulkitJalan\Google\Client;
-
-use Revolution\Google\Sheets\Facades\Sheets;
+use Tipy\Google\Sheets\Facades\Sheets;
 
 class SheetsTest extends TestCase
 {
@@ -50,9 +48,9 @@ class SheetsTest extends TestCase
         );
 
         $photos = Sheets::setAccessToken([
-            'access_token'  => 'test',
+            'access_token' => 'test',
             'refresh_token' => 'test',
-            'expires_in'    => 0,
+            'expires_in' => 0,
         ]);
 
         $this->assertInstanceOf(\Google_Service_Sheets::class, $photos->getService());

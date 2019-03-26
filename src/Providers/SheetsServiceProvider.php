@@ -1,12 +1,11 @@
 <?php
 
-namespace Revolution\Google\Sheets\Providers;
+namespace Tipy\Google\Sheets\Providers;
 
-use Illuminate\Support\ServiceProvider;
 use Illuminate\Contracts\Support\DeferrableProvider;
-
-use Revolution\Google\Sheets\Sheets;
-use Revolution\Google\Sheets\Contracts\Factory;
+use Illuminate\Support\ServiceProvider;
+use Tipy\Google\Sheets\Contracts\Factory;
+use Tipy\Google\Sheets\Sheets;
 
 class SheetsServiceProvider extends ServiceProvider implements DeferrableProvider
 {

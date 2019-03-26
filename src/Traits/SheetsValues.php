@@ -1,13 +1,13 @@
 <?php
 
-namespace Revolution\Google\Sheets\Traits;
+namespace Tipy\Google\Sheets\Traits;
 
 trait SheetsValues
 {
     /**
-     * @var string
+     * @var array
      */
-    protected $range;
+    protected $ranges;
 
     /**
      * @var string
@@ -27,6 +27,16 @@ trait SheetsValues
     /**
      * @return array|null
      */
+    public function first()
+    {
+        $values = $this->all();
+
+        return array_shift($values);
+    }
+
+    /**
+     * @return array|null
+     */
     public function all()
     {
         $query = $this->query();
@@ -40,33 +50,77 @@ trait SheetsValues
     }
 
     /**
-     * @return array|null
+     * @return array
      */
-    public function first()
+    private function query(): array
     {
-        $values = $this->all();
+        $query = [];
 
-        return array_shift($values);
+        $ranges = $this->getRanges();
+
+        if (!empty($ranges)) {
+            $query['ranges'] = $ranges;
+        }
+
+        if (!empty($this->majorDimension)) {
+            $query['majorDimension'] = $this->majorDimension;
+        }
+
+        if (!empty($this->valueRenderOption)) {
+            $query['valueRenderOption'] = $this->valueRenderOption;
+        }
+
+        if (!empty($this->dateTimeRenderOption)) {
+            $query['dateTimeRenderOption'] = $this->dateTimeRenderOption;
+        }
+
+        return $query;
     }
 
     /**
-     * @param array  $value
+     * @return array
+     */
+    public function getRanges()
+    {
+        $ranges = [];
+
+        if (empty($this->ranges)) {
+            $ranges[] = $this->sheet;
+        } else {
+            foreach ($this->ranges as $range) {
+                if (strpos($range, '!') === false) {
+                    $ranges[] = $this->sheet . '!' . $range;
+                } else {
+                    $ranges[] = $range;
+                }
+            }
+        }
+
+        return $ranges;
+    }
+
+    /**
+     * @param array $values
      * @param string $valueInputOption
      *
      * @return mixed|\Google_Service_Sheets_UpdateValuesResponse
      */
-    public function update(array $value, string $valueInputOption = 'RAW')
+    public function update(array $values, string $valueInputOption = 'RAW')
     {
-        $range = $this->ranges();
+        $ranges = $this->getRanges();
 
         $batch = new \Google_Service_Sheets_BatchUpdateValuesRequest();
         $batch->setValueInputOption($valueInputOption);
 
-        $valueRange = new \Google_Service_Sheets_ValueRange();
-        $valueRange->setValues($value);
-        $valueRange->setRange($range);
+        $data = [];
+        foreach ($ranges as $key => $range) {
+            $valueRange = new \Google_Service_Sheets_ValueRange();
+            $valueRange->setValues($values[$key]);
+            $valueRange->setRange($range);
+            $data[] = $valueRange;
+        }
 
-        $batch->setData($valueRange);
+        $batch->setData($data);
 
         $response = $this->getService()->spreadsheets_values
             ->batchUpdate($this->spreadsheetId, $batch);
@@ -79,18 +133,18 @@ trait SheetsValues
      */
     public function clear()
     {
-        $range = $this->ranges();
+        $ranges = $this->getRanges();
 
         $clear = new \Google_Service_Sheets_ClearValuesRequest();
 
         $response = $this->getService()->spreadsheets_values
-            ->clear($this->spreadsheetId, $range, $clear);
+            ->clear($this->spreadsheetId, $ranges, $clear);
 
         return $response;
     }
 
     /**
-     * @param array  $value
+     * @param array $value
      * @param string $valueInputOption
      * @param string $insertDataOption
      *
@@ -98,11 +152,11 @@ trait SheetsValues
      */
     public function append(array $value, string $valueInputOption = 'RAW', string $insertDataOption = 'OVERWRITE')
     {
-        $range = $this->ranges();
+        $ranges = $this->getRanges();
 
         $valueRange = new \Google_Service_Sheets_ValueRange();
         $valueRange->setValues($value);
-        $valueRange->setRange($range);
+        $valueRange->setRange($ranges[0]);
 
         $optParams = [
             'valueInputOption' => $valueInputOption,
@@ -110,37 +164,19 @@ trait SheetsValues
         ];
 
         $response = $this->getService()->spreadsheets_values
-            ->append($this->spreadsheetId, $range, $valueRange, $optParams);
+            ->append($this->spreadsheetId, $ranges[0], $valueRange, $optParams);
 
         return $response;
     }
 
     /**
-     * @return string
-     */
-    public function ranges()
-    {
-        if (strpos($this->range, '!') === false) {
-            if (empty($this->range)) {
-                $ranges = $this->sheet;
-            } else {
-                $ranges = $this->sheet . '!' . $this->range;
-            }
-        } else {
-            $ranges = $this->range;
-        }
-
-        return $ranges;
-    }
-
-    /**
-     * @param string $range
+     * @param array $ranges
      *
      * @return $this
      */
-    public function range(string $range)
+    public function setRanges(array $ranges)
     {
-        $this->range = $range;
+        $this->ranges = $ranges;
 
         return $this;
     }
@@ -167,33 +203,5 @@ trait SheetsValues
         $this->dateTimeRenderOption = $dateTimeRenderOption;
 
         return $this;
-    }
-
-    /**
-     * @return array
-     */
-    private function query(): array
-    {
-        $query = [];
-
-        $ranges = $this->ranges();
-
-        if (!empty($ranges)) {
-            $query['ranges'] = $ranges;
-        }
-
-        if (!empty($this->majorDimension)) {
-            $query['majorDimension'] = $this->majorDimension;
-        }
-
-        if (!empty($this->valueRenderOption)) {
-            $query['valueRenderOption'] = $this->valueRenderOption;
-        }
-
-        if (!empty($this->dateTimeRenderOption)) {
-            $query['dateTimeRenderOption'] = $this->dateTimeRenderOption;
-        }
-
-        return $query;
     }
 }

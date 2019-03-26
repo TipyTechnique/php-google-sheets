@@ -1,10 +1,9 @@
 <?php
 
-namespace Revolution\Google\Sheets\Facades;
+namespace Tipy\Google\Sheets\Facades;
 
 use Illuminate\Support\Facades\Facade;
-
-use Revolution\Google\Sheets\Contracts\Factory;
+use Tipy\Google\Sheets\Contracts\Factory;
 
 class Sheets extends Facade
 {

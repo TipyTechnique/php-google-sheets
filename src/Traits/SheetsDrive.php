@@ -1,6 +1,6 @@
 <?php
 
-namespace Revolution\Google\Sheets\Traits;
+namespace Tipy\Google\Sheets\Traits;
 
 use Google_Service_Drive;
 
@@ -37,6 +37,14 @@ trait SheetsDrive
     }
 
     /**
+     * @return Google_Service_Drive|\Google_Service
+     */
+    public function getDriveService()
+    {
+        return $this->drive;
+    }
+
+    /**
      * @param Google_Service_Drive|\Google_Service $drive
      *
      * @return $this
@@ -46,13 +54,5 @@ trait SheetsDrive
         $this->drive = $drive;
 
         return $this;
-    }
-
-    /**
-     * @return Google_Service_Drive|\Google_Service
-     */
-    public function getDriveService()
-    {
-        return $this->drive;
     }
 }

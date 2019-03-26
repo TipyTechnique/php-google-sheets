@@ -1,5 +1,6 @@
 <?php
-namespace Revolution\Google\Sheets\Traits;
+
+namespace Tipy\Google\Sheets\Traits;
 
 use Illuminate\Support\Collection;
 

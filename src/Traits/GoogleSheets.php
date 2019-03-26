@@ -1,9 +1,9 @@
 <?php
 
-namespace Revolution\Google\Sheets\Traits;
+namespace Tipy\Google\Sheets\Traits;
 
 use Illuminate\Container\Container;
-use Revolution\Google\Sheets\Contracts\Factory;
+use Tipy\Google\Sheets\Contracts\Factory;
 
 /**
  * use at User model
@@ -12,6 +12,7 @@ trait GoogleSheets
 {
     /**
      * @return Factory
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
      */
     public function sheets()
     {

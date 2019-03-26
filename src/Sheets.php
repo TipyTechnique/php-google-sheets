@@ -1,15 +1,13 @@
 <?php
 
-namespace Revolution\Google\Sheets;
+namespace Tipy\Google\Sheets;
 
 use Google_Service_Sheets;
-use PulkitJalan\Google\Client;
-
 use Illuminate\Container\Container;
-use Illuminate\Support\Traits\Macroable;
 use Illuminate\Support\Arr;
-
-use Revolution\Google\Sheets\Contracts\Factory;
+use Illuminate\Support\Traits\Macroable;
+use PulkitJalan\Google\Client;
+use Tipy\Google\Sheets\Contracts\Factory;
 
 class Sheets implements Factory
 {
@@ -36,30 +34,6 @@ class Sheets implements Factory
     protected $sheet;
 
     /**
-     * @param Google_Service_Sheets|\Google_Service $service
-     *
-     * @return $this
-     */
-    public function setService($service)
-    {
-        $this->service = $service;
-
-        return $this;
-    }
-
-    /**
-     * @return Google_Service_Sheets
-     */
-    public function getService(): Google_Service_Sheets
-    {
-        if (is_null($this->service)) {
-            $this->service = Container::getInstance()->make(Client::class)->make('sheets');
-        }
-
-        return $this->service;
-    }
-
-    /**
      * set access_token and set new service
      *
      * @param string|array $token
@@ -83,15 +57,41 @@ class Sheets implements Factory
         }
 
         return $this->setService($google->make('sheets'))
-                    ->setDriveService($google->make('drive'));
+            ->setDriveService($google->make('drive'));
     }
 
     /**
      * @return array
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
      */
     public function getAccessToken()
     {
         return $this->getService()->getClient()->getAccessToken();
+    }
+
+    /**
+     * @return Google_Service_Sheets
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     */
+    public function getService(): Google_Service_Sheets
+    {
+        if (is_null($this->service)) {
+            $this->service = Container::getInstance()->make(Client::class)->make('sheets');
+        }
+
+        return $this->service;
+    }
+
+    /**
+     * @param Google_Service_Sheets|\Google_Service $service
+     *
+     * @return $this
+     */
+    public function setService($service)
+    {
+        $this->service = $service;
+
+        return $this;
     }
 
     /**
@@ -137,6 +137,7 @@ class Sheets implements Factory
      * @param string $sheetId
      *
      * @return $this
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
      */
     public function sheetById(string $sheetId)
     {
@@ -151,6 +152,7 @@ class Sheets implements Factory
 
     /**
      * @return array
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
      */
     public function sheetList(): array
     {
@@ -171,6 +173,7 @@ class Sheets implements Factory
      * @return mixed
      *
      * @throws \InvalidArgumentException
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
      */
     public function __get($property)
     {
@@ -185,9 +188,10 @@ class Sheets implements Factory
      * Magic call method.
      *
      * @param string $method
-     * @param array  $parameters
+     * @param array $parameters
      *
      * @throws \BadMethodCallException
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
      *
      * @return mixed
      */

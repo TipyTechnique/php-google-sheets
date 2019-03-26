@@ -2,11 +2,10 @@
 
 namespace Tests;
 
-use Revolution\Google\Sheets\Providers\SheetsServiceProvider;
-use Revolution\Google\Sheets\Facades\Sheets;
-
-use PulkitJalan\Google\GoogleServiceProvider;
 use PulkitJalan\Google\Facades\Google;
+use PulkitJalan\Google\GoogleServiceProvider;
+use Tipy\Google\Sheets\Facades\Sheets;
+use Tipy\Google\Sheets\Providers\SheetsServiceProvider;
 
 class TestCase extends \Orchestra\Testbench\TestCase
 {
@@ -38,9 +37,9 @@ class TestCase extends \Orchestra\Testbench\TestCase
         // Setup default database to use sqlite :memory:
         $app['config']->set('database.default', 'testbench');
         $app['config']->set('database.connections.testbench', [
-            'driver'   => 'sqlite',
+            'driver' => 'sqlite',
             'database' => ':memory:',
-            'prefix'   => '',
+            'prefix' => '',
         ]);
     }
 }
