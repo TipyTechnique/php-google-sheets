@@ -155,4 +155,11 @@ interface Factory
      * @return $this
      */
     public function dateTimeRenderOption(string $dateTimeRenderOption);
+
+    /**
+     * @param array $properties
+     *
+     * @return $this
+     */
+    public function addSheet(array $properties);
 }

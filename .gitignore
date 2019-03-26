@@ -4,3 +4,4 @@ composer.lock
 tests/data/test*
 !tests/data/test-config-sample.php
 .idea
+.env

@@ -204,4 +204,32 @@ trait SheetsValues
 
         return $this;
     }
+
+    /**
+     * @param array $properties
+     *
+     * @return mixed|\Google_Service_Sheets_UpdateValuesResponse
+     */
+    public function addSheet(array $properties)
+    {
+        $title = $properties['title'];
+
+        //Create New Sheet
+        $batch = new \Google_Service_Sheets_BatchUpdateSpreadsheetRequest(
+            array(
+                'requests' => array(
+                    'addSheet' => array(
+                        'properties' => array(
+                            'title' => $title
+                        )
+                    )
+                )
+            )
+        );
+
+        $response = $this->getService()->spreadsheets
+            ->batchUpdate($this->spreadsheetId, $batch);
+
+        return $response;
+    }
 }
