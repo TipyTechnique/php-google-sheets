@@ -1,5 +1,5 @@
 {
-  "name": "TipyTechnique/php-google-sheets",
+  "name": "tipytechnique/php-google-sheets",
   "description": "Google Sheets API v4 (with Laravel or simple PHP)",
   "keywords": [
     "google",
