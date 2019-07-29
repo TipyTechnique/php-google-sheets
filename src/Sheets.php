@@ -2,10 +2,16 @@
 
 namespace Tipy\Google\Sheets;
 
+use BadMethodCallException;
+use Closure;
+use Exception;
+use Google_Service;
 use Google_Service_Sheets;
 use Illuminate\Container\Container;
+use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Traits\Macroable;
+use InvalidArgumentException;
 use PulkitJalan\Google\Client;
 use Tipy\Google\Sheets\Contracts\Factory;
 
@@ -19,7 +25,7 @@ class Sheets implements Factory
     use Macroable;
 
     /**
-     * @var \Google_Service_Sheets
+     * @var Google_Service_Sheets
      */
     protected $service;
 
@@ -36,10 +42,10 @@ class Sheets implements Factory
     /**
      * set access_token and set new service
      *
-     * @param string|array $token
+     * @param  string|array  $token
      *
      * @return $this
-     * @throws \Exception
+     * @throws Exception
      */
     public function setAccessToken($token)
     {
@@ -57,12 +63,13 @@ class Sheets implements Factory
         }
 
         return $this->setService($google->make('sheets'))
-            ->setDriveService($google->make('drive'));
+            ->setDriveService($google->make('drive'))
+            ->setDriveFileService($google->make('drive_DriveFile'));
     }
 
     /**
      * @return array
-     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     * @throws BindingResolutionException
      */
     public function getAccessToken()
     {
@@ -71,7 +78,7 @@ class Sheets implements Factory
 
     /**
      * @return Google_Service_Sheets
-     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     * @throws BindingResolutionException
      */
     public function getService(): Google_Service_Sheets
     {
@@ -83,7 +90,7 @@ class Sheets implements Factory
     }
 
     /**
-     * @param Google_Service_Sheets|\Google_Service $service
+     * @param  Google_Service_Sheets|Google_Service  $service
      *
      * @return $this
      */
@@ -95,7 +102,7 @@ class Sheets implements Factory
     }
 
     /**
-     * @param string $spreadsheetId
+     * @param  string  $spreadsheetId
      *
      * @return $this
      */
@@ -107,7 +114,7 @@ class Sheets implements Factory
     }
 
     /**
-     * @param string $title
+     * @param  string  $title
      *
      * @return $this
      */
@@ -122,7 +129,7 @@ class Sheets implements Factory
     }
 
     /**
-     * @param string $sheet
+     * @param  string  $sheet
      *
      * @return $this
      */
@@ -134,10 +141,10 @@ class Sheets implements Factory
     }
 
     /**
-     * @param string $sheetId
+     * @param  string  $sheetId
      *
      * @return $this
-     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     * @throws BindingResolutionException
      */
     public function sheetById(string $sheetId)
     {
@@ -152,7 +159,7 @@ class Sheets implements Factory
 
     /**
      * @return array
-     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     * @throws BindingResolutionException
      */
     public function sheetList(): array
     {
@@ -168,12 +175,12 @@ class Sheets implements Factory
     }
 
     /**
-     * @param string $property
+     * @param  string  $property
      *
      * @return mixed
      *
-     * @throws \InvalidArgumentException
-     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     * @throws InvalidArgumentException
+     * @throws BindingResolutionException
      */
     public function __get($property)
     {
@@ -181,19 +188,19 @@ class Sheets implements Factory
             return $this->getService()->{$property};
         }
 
-        throw new \InvalidArgumentException(sprintf('Property [%s] does not exist.', $property));
+        throw new InvalidArgumentException(sprintf('Property [%s] does not exist.', $property));
     }
 
     /**
      * Magic call method.
      *
-     * @param string $method
-     * @param array $parameters
-     *
-     * @throws \BadMethodCallException
-     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     * @param  string  $method
+     * @param  array  $parameters
      *
      * @return mixed
+     * @throws BindingResolutionException
+     *
+     * @throws BadMethodCallException
      */
     public function __call($method, $parameters)
     {
@@ -202,11 +209,11 @@ class Sheets implements Factory
         }
 
         if (static::hasMacro($method)) {
-            if (static::$macros[$method] instanceof \Closure) {
+            if (static::$macros[$method] instanceof Closure) {
                 return call_user_func_array(static::$macros[$method]->bindTo($this, static::class), $parameters);
             }
         }
 
-        throw new \BadMethodCallException(sprintf('Method [%s] does not exist.', $method));
+        throw new BadMethodCallException(sprintf('Method [%s] does not exist.', $method));
     }
 }

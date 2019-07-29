@@ -2,6 +2,13 @@
 
 namespace Tipy\Google\Sheets\Traits;
 
+use Google_Service_Sheets_AppendValuesResponse;
+use Google_Service_Sheets_BatchUpdateValuesRequest;
+use Google_Service_Sheets_ClearValuesRequest;
+use Google_Service_Sheets_ClearValuesResponse;
+use Google_Service_Sheets_UpdateValuesResponse;
+use Google_Service_Sheets_ValueRange;
+
 trait SheetsValues
 {
     /**
@@ -89,7 +96,7 @@ trait SheetsValues
         } else {
             foreach ($this->ranges as $range) {
                 if (strpos($range, '!') === false) {
-                    $ranges[] = $this->sheet . '!' . $range;
+                    $ranges[] = $this->sheet.'!'.$range;
                 } else {
                     $ranges[] = $range;
                 }
@@ -100,21 +107,33 @@ trait SheetsValues
     }
 
     /**
-     * @param array $values
-     * @param string $valueInputOption
+     * @param  array  $ranges
      *
-     * @return mixed|\Google_Service_Sheets_UpdateValuesResponse
+     * @return $this
+     */
+    public function setRanges(array $ranges)
+    {
+        $this->ranges = $ranges;
+
+        return $this;
+    }
+
+    /**
+     * @param  array  $values
+     * @param  string  $valueInputOption
+     *
+     * @return mixed|Google_Service_Sheets_UpdateValuesResponse
      */
     public function update(array $values, string $valueInputOption = 'RAW')
     {
         $ranges = $this->getRanges();
 
-        $batch = new \Google_Service_Sheets_BatchUpdateValuesRequest();
+        $batch = new Google_Service_Sheets_BatchUpdateValuesRequest();
         $batch->setValueInputOption($valueInputOption);
 
         $data = [];
         foreach ($ranges as $key => $range) {
-            $valueRange = new \Google_Service_Sheets_ValueRange();
+            $valueRange = new Google_Service_Sheets_ValueRange();
             $valueRange->setValues($values[$key]);
             $valueRange->setRange($range);
             $data[] = $valueRange;
@@ -129,13 +148,13 @@ trait SheetsValues
     }
 
     /**
-     * @return mixed|\Google_Service_Sheets_ClearValuesResponse
+     * @return mixed|Google_Service_Sheets_ClearValuesResponse
      */
     public function clear()
     {
         $ranges = $this->getRanges();
 
-        $clear = new \Google_Service_Sheets_ClearValuesRequest();
+        $clear = new Google_Service_Sheets_ClearValuesRequest();
 
         $response = $this->getService()->spreadsheets_values
             ->clear($this->spreadsheetId, $ranges, $clear);
@@ -144,17 +163,17 @@ trait SheetsValues
     }
 
     /**
-     * @param array $value
-     * @param string $valueInputOption
-     * @param string $insertDataOption
+     * @param  array  $value
+     * @param  string  $valueInputOption
+     * @param  string  $insertDataOption
      *
-     * @return mixed|\Google_Service_Sheets_AppendValuesResponse
+     * @return mixed|Google_Service_Sheets_AppendValuesResponse
      */
     public function append(array $value, string $valueInputOption = 'RAW', string $insertDataOption = 'OVERWRITE')
     {
         $ranges = $this->getRanges();
 
-        $valueRange = new \Google_Service_Sheets_ValueRange();
+        $valueRange = new Google_Service_Sheets_ValueRange();
         $valueRange->setValues($value);
         $valueRange->setRange($ranges[0]);
 
@@ -170,19 +189,7 @@ trait SheetsValues
     }
 
     /**
-     * @param array $ranges
-     *
-     * @return $this
-     */
-    public function setRanges(array $ranges)
-    {
-        $this->ranges = $ranges;
-
-        return $this;
-    }
-
-    /**
-     * @param string $majorDimension
+     * @param  string  $majorDimension
      *
      * @return $this
      */
@@ -194,7 +201,7 @@ trait SheetsValues
     }
 
     /**
-     * @param string $dateTimeRenderOption
+     * @param  string  $dateTimeRenderOption
      *
      * @return $this
      */
@@ -203,33 +210,5 @@ trait SheetsValues
         $this->dateTimeRenderOption = $dateTimeRenderOption;
 
         return $this;
-    }
-
-    /**
-     * @param array $properties
-     *
-     * @return mixed|\Google_Service_Sheets_UpdateValuesResponse
-     */
-    public function addSheet(array $properties)
-    {
-        $title = $properties['title'];
-
-        //Create New Sheet
-        $batch = new \Google_Service_Sheets_BatchUpdateSpreadsheetRequest(
-            array(
-                'requests' => array(
-                    'addSheet' => array(
-                        'properties' => array(
-                            'title' => $title
-                        )
-                    )
-                )
-            )
-        );
-
-        $response = $this->getService()->spreadsheets
-            ->batchUpdate($this->spreadsheetId, $batch);
-
-        return $response;
     }
 }

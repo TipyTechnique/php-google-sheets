@@ -2,10 +2,12 @@
 
 namespace Tipy\Google\Sheets\Traits;
 
+use stdClass;
+
 trait SheetsProperties
 {
     /**
-     * @return \stdClass
+     * @return stdClass
      */
     public function spreadsheetProperties()
     {
@@ -15,7 +17,7 @@ trait SheetsProperties
     }
 
     /**
-     * @return \stdClass
+     * @return stdClass
      */
     public function sheetProperties()
     {

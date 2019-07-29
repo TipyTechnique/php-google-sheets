@@ -3,6 +3,7 @@
 namespace Tipy\Google\Sheets\Traits;
 
 use Illuminate\Container\Container;
+use Illuminate\Contracts\Container\BindingResolutionException;
 use Tipy\Google\Sheets\Contracts\Factory;
 
 /**
@@ -12,7 +13,7 @@ trait GoogleSheets
 {
     /**
      * @return Factory
-     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     * @throws BindingResolutionException
      */
     public function sheets()
     {

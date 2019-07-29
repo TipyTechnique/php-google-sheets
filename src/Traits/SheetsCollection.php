@@ -7,7 +7,7 @@ use Illuminate\Support\Collection;
 trait SheetsCollection
 {
     /**
-     * @return \Illuminate\Support\Collection
+     * @return Collection
      */
     public function get(): Collection
     {
@@ -17,10 +17,10 @@ trait SheetsCollection
     }
 
     /**
-     * @param array $header
-     * @param array|\Illuminate\Support\Collection $rows
+     * @param  array  $header
+     * @param  array|Collection  $rows
      *
-     * @return \Illuminate\Support\Collection
+     * @return Collection
      */
     public function collection(array $header, $rows): Collection
     {
