@@ -65,19 +65,19 @@ trait SheetsValues
 
         $ranges = $this->getRanges();
 
-        if (!empty($ranges)) {
+        if (! empty($ranges)) {
             $query['ranges'] = $ranges;
         }
 
-        if (!empty($this->majorDimension)) {
+        if (! empty($this->majorDimension)) {
             $query['majorDimension'] = $this->majorDimension;
         }
 
-        if (!empty($this->valueRenderOption)) {
+        if (! empty($this->valueRenderOption)) {
             $query['valueRenderOption'] = $this->valueRenderOption;
         }
 
-        if (!empty($this->dateTimeRenderOption)) {
+        if (! empty($this->dateTimeRenderOption)) {
             $query['dateTimeRenderOption'] = $this->dateTimeRenderOption;
         }
 
@@ -107,7 +107,7 @@ trait SheetsValues
     }
 
     /**
-     * @param  array  $ranges
+     * @param array $ranges
      *
      * @return $this
      */
@@ -119,8 +119,8 @@ trait SheetsValues
     }
 
     /**
-     * @param  array  $values
-     * @param  string  $valueInputOption
+     * @param array  $values
+     * @param string $valueInputOption
      *
      * @return mixed|Google_Service_Sheets_UpdateValuesResponse
      */
@@ -132,11 +132,18 @@ trait SheetsValues
         $batch->setValueInputOption($valueInputOption);
 
         $data = [];
-        foreach ($ranges as $key => $range) {
+        if (count($ranges) == 1) {
             $valueRange = new Google_Service_Sheets_ValueRange();
-            $valueRange->setValues($values[$key]);
-            $valueRange->setRange($range);
+            $valueRange->setValues($values);
+            $valueRange->setRange($ranges[0]);
             $data[] = $valueRange;
+        } else {
+            foreach ($ranges as $key => $range) {
+                $valueRange = new Google_Service_Sheets_ValueRange();
+                $valueRange->setValues($values[$key]);
+                $valueRange->setRange($range);
+                $data[] = $valueRange;
+            }
         }
 
         $batch->setData($data);
@@ -163,9 +170,9 @@ trait SheetsValues
     }
 
     /**
-     * @param  array  $value
-     * @param  string  $valueInputOption
-     * @param  string  $insertDataOption
+     * @param array  $value
+     * @param string $valueInputOption
+     * @param string $insertDataOption
      *
      * @return mixed|Google_Service_Sheets_AppendValuesResponse
      */
@@ -189,7 +196,7 @@ trait SheetsValues
     }
 
     /**
-     * @param  string  $majorDimension
+     * @param string $majorDimension
      *
      * @return $this
      */
@@ -201,7 +208,7 @@ trait SheetsValues
     }
 
     /**
-     * @param  string  $dateTimeRenderOption
+     * @param string $dateTimeRenderOption
      *
      * @return $this
      */
